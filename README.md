@@ -17,6 +17,8 @@ Time is very limited, so requirements will be met in the following order:
 5. flagging cells
 6. persistence (time to setup is too high and can be invested in features)
 
+At some point, I'll add a how to play section here
+
 ### Running web app
 
 This includes app structure, tools and a simple endpoint.
@@ -28,4 +30,27 @@ All built with tdd, using the following tools:
 * Bundler as the dependecy manager
 
 ### Game CRUD
+
+For the game CRUD, I'll start by building the Game class, and work my way up to the controller from there. 
+
+This is the first entry in the README file I write _before_ coding the actual thing.
+
+I plan on tdd-ing a `Game` class that implements the public API for a `Game` object.
+
+What I expect to code is:
+
+For the game class
+
+* game class that can be instantiated with fixed number of rows and columns
+* seeding of bombs
+* game creation time
+* status: [won, lost, inprogress]
+* public method to reveal a cell
+
+For cells
+
+* coordinates/position
+* content [bomb, empty, # of surrounding bombs]
+* status [revealed, concealed, flagged]
+
 
