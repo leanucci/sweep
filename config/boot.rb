@@ -11,6 +11,7 @@ require 'active_support'
 
 paths = [
   'app/controllers',
+  'app/models',
   'config'
 ]
 
