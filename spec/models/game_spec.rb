@@ -7,7 +7,11 @@ describe Game do
     # * game creation time
     # * status: [won, lost, inprogress]
     # * public method to reveal a cell
-    it "has fixed dimensions"
+    it "has fixed dimensions" do
+      game = Game.new
+      expect(game.rows.flatten.size).to eq(Game::ROW_SIZE * Game::COLUMN_SIZE)
+    end
+
     it "has bombs" # no clue yet of what this test does
     it "has a start date"
     it "is in state inprogress"
