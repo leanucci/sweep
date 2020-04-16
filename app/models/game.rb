@@ -1,10 +1,12 @@
 class Game
-  attr_reader :rows
+  attr_reader :rows, :started, :finished, :status
 
   def initialize(rows_num = 8, cols_num = 8)
     @rows_num = rows_num
     @cols_num = cols_num
     @bomb_count = ((rows_num * cols_num) / 6).round
+    @started = Time.now
+    @status = 'in progress'
     @rows = []
 
     populate!

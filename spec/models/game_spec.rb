@@ -23,8 +23,14 @@ describe Game do
       expect(bigger_game_bombs.count).to eq(42)
     end
 
-    it "has a start date"
-    it "is in state inprogress"
+    it "has a start date" do
+      expect(game.started).to be_a(Time)
+    end
+
+    it "is in 'in progress' status" do
+      expect(game.status).to eq('in progress')
+    end
+
     it "allows a cell position to be revealed"
   end
 end
