@@ -8,4 +8,5 @@ gem 'rack'
 group :test do
   gem 'rspec', '3.9.0'
   gem 'rack-test', '1.1.0'
+  gem 'byebug'
 end

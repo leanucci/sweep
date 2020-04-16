@@ -4,6 +4,7 @@ require_relative '../config/boot'
 
 require 'rspec'
 require 'rack/test'
+require 'byebug'
 
 module RSpecMixin
   include Rack::Test::Methods
