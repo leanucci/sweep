@@ -7,12 +7,16 @@ describe Game do
     # * game creation time
     # * status: [won, lost, inprogress]
     # * public method to reveal a cell
+    subject(:game) { Game.new }
     it "has fixed dimensions" do
-      game = Game.new
-      expect(game.rows.flatten.size).to eq(Game::ROW_SIZE * Game::COLUMN_SIZE)
+      expect(subject.rows.flatten.size).to eq(Game::ROW_SIZE * Game::COLUMN_SIZE)
     end
 
-    it "has bombs" # no clue yet of what this test does
+    it "has bombs" do
+      bombs = subject.rows.flatten.select { |cell| cell[:bomb] } 
+      expect(bombs.count).to eq(Game::BOMBS)
+    end
+
     it "has a start date"
     it "is in state inprogress"
     it "allows a cell position to be revealed"
