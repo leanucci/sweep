@@ -3,10 +3,14 @@
 class Game
   attr_reader :rows, :started, :finished, :status
 
-  def initialize(rows_num = 8, cols_num = 8)
-    @rows_num = rows_num
-    @cols_num = cols_num
-    @bomb_count = ((rows_num * cols_num) / 6).round
+  GAME_LEVEL = {
+    easy: [8, 8, 10],
+    medium: [16, 16, 40],
+    hard: [30, 20, 100]
+  }
+
+  def initialize(level = :easy)
+    @rows_num, @cols_num, @bomb_count = GAME_LEVEL[level]
     @started = Time.now
     @status = 'in progress'
     @rows = []

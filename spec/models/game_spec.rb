@@ -9,8 +9,8 @@ describe Game do
     # * game creation time
     # * status: [won, lost, inprogress]
     # * public method to reveal a cell
-    subject(:game) { Game.new }
-    let(:bigger_game) { Game.new(16, 16) }
+    subject(:game) { Game.new(:easy) }
+    let(:bigger_game) { Game.new(:medium) }
 
     it 'has cells equal to rows * cols' do
       expect(subject.rows.flatten.size).to eq(64)
@@ -22,7 +22,7 @@ describe Game do
       expect(bombs.count).to eq(10)
 
       bigger_game_bombs = bigger_game.rows.flatten.select { |cell| cell[:bomb] }
-      expect(bigger_game_bombs.count).to eq(42)
+      expect(bigger_game_bombs.count).to eq(40)
     end
 
     it 'has a start date' do
