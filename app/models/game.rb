@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Game
   attr_reader :rows, :started, :finished, :status
 
@@ -10,17 +12,45 @@ class Game
     @rows = []
 
     populate!
-
-    self
   end
 
   def content
     @content ||= rows.map do |row|
-      row.map { |r| r[:revealed] ? r[:content] : "#" }.join(" ")
+      row.map { |r| r[:revealed] ? r[:content] : '#' }.join(' ')
     end
   end
 
+  def reveal(row, col)
+    if row > (@rows_num - 1) || row.negative? || col > (@cols_num - 1) || col.negative?
+      return false
+    end
+    return self if @finished
+
+    reveal_cel(row, col)
+    @content = nil
+
+    self
+  end
+
   private
+
+  # reveal the cel, lose the game if its a bomb
+  # reveal adjacent non bomb if this cel doesn't have any bombs around
+  def reveal_cel(row, col)
+    cel = rows[row][col]
+
+    cel[:revealed] = true
+
+    if cel[:bomb]
+      @status = 'lost'
+      @finished = Time.now
+    elsif cel[:content] == '0'
+      surrounding_cells(row, col).each do |coords|
+        cel = rows[coords.first][coords.last]
+        cel[:revealed] = cel[:content] == '0'
+      end
+    end
+  end
 
   def populate!
     add_rows
@@ -35,7 +65,7 @@ class Game
   def create_cells
     rows.each do |row|
       @cols_num.times do
-        row << Hash.new
+        row << ({})
       end
     end
   end
@@ -55,13 +85,12 @@ class Game
     rows.each_with_index do |row, row_index|
       row.each_with_index do |cell, col_index|
         cell[:revealed] = false
-        cell[:content] = nil
-
-        if cell[:bomb]
-          cell[:content] = 'b'
-        else
-          cell[:content] = find_surrounding_bombs(row_index, col_index)
+        cell[:content] = if cell[:bomb]
+                           'b'
+                         else
+                           find_surrounding_bombs(row_index, col_index).count.to_s
         end
+
         rows[row_index][col_index] = cell
       end
     end
@@ -69,10 +98,10 @@ class Game
 
   # very very simple seed implementation
   def bomb_locations
-
     @bomb_locations ||= begin
       bomb_rows = (0...@rows_num).to_a.shuffle.take(@bomb_count)
       bomb_cols = (0...@cols_num).to_a.shuffle.take(@bomb_count)
+
       bomb_rows.product(bomb_cols).shuffle.take(@bomb_count)
     end
   end
@@ -85,12 +114,12 @@ class Game
   # ]
   #
   def find_surrounding_bombs(row, col)
-    possible_locations = []
-    
-    row_numbers = [row -1, row, row +1].reject { |num| num.negative? || num +1 > @rows_num }
-    col_numbers = [col -1, col, col+1].reject { |num| num.negative? || num +1 > @cols_num }
-    possible_locations = row_numbers.product(col_numbers) - [row,col]
+    surrounding_cells(row, col).intersection(bomb_locations)
+  end
 
-    possible_locations.intersection(bomb_locations).size.to_s
+  def surrounding_cells(row, col)
+    row_numbers = [row - 1, row, row + 1].reject { |num| num.negative? || num + 1 > @rows_num }
+    col_numbers = [col - 1, col, col + 1].reject { |num| num.negative? || num + 1 > @cols_num }
+    row_numbers.product(col_numbers) - [row, col]
   end
 end

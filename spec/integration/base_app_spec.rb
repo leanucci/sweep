@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Api::BaseApp do
@@ -5,7 +7,7 @@ describe Api::BaseApp do
     it "responds 'welcome'" do
       get '/'
       expect(last_response).to be_ok
-      expect(last_response.body).to eq("welcome")
+      expect(last_response.body).to eq('welcome')
     end
   end
 end

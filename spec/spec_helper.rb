@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 APP_ENV = 'test'
 
 require_relative '../config/boot'

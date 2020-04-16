@@ -1,4 +1,8 @@
-APP_ENV = ENV["APP_ENV"] ||= ENV["RACK_ENV"] ||= 'development' unless defined?(APP_ENV)
+# frozen_string_literal: true
+
+unless defined?(APP_ENV)
+  APP_ENV = ENV['APP_ENV'] ||= ENV['RACK_ENV'] ||= 'development'
+end
 
 APP_ROOT = File.expand_path('..', __dir__) + '/'
 
