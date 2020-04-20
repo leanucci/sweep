@@ -1,5 +1,66 @@
 # Yet another Minesweeper
 
+## How to play
+
+### Create a game:
+
+    POST to https://sweeper-lean.herokuapp.com/games
+
+You will get a response with the game details, including its id. Right now the only available game size is
+8x8. It is recommended to use an http client that beautifies the JSON response. 
+
+Sample response:
+
+```json
+{
+  "started": "2020-04-20 12:57:17 -0300",
+  "finished": null,
+  "status": "in progress",
+  "id": "c0de2506",
+  "columns": 8,
+  "rotws": 8,
+  "board":{
+    "0": "# # # # # # # #",
+    "1": "# # # # # # # #",
+    "2": "# # # # # # # #",
+    "3": "# # # # # # # #",
+    "4": "# # # # # # # #",
+    "5": "# # # # # # # #",
+    "6": "# # # # # # # #",
+    "7": "# # # # # # # #"
+  }
+}
+```
+
+### Make a move
+
+    PUT to https://sweeper-lean.herokuapp.com/games/:id
+
+You need to submit `row` and `col` params with the row number. If its a valid position, you will get an
+updated status for the board:
+
+Example for a request revealing row 5, col 2
+
+```json
+{
+  "started": "2020-04-20 12:57:17 -0300",
+  "finished": null,
+  "status": "in progress",
+  "id": "c0de2506",
+  "columns": 8,
+  "rotws": 8,
+  "board":{
+    "0": "# # # # # # # #",
+    "1": "# # # # # # # #",
+    "2": "# # # # # # # #",
+    "3": "# # # # # # # #",
+    "4": "# # # # # # # #",
+    "5": "# # 1 # # # # #",
+    "6": "# # # # # # # #",
+    "7": "# # # # # # # #"
+  }
+}
+```
 ## What is it
 
 Minesweeper is a classic game where you reveal cells on a grid which contains some bombs, with the goal of

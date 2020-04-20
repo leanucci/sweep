@@ -1,25 +1,38 @@
 # frozen_string_literal: true
 
 class Game
-  attr_reader :rows, :started, :finished, :status
+  attr_reader :rows, :started, :finished, :status, :id
 
   GAME_LEVEL = {
-    easy: [8, 8, 10],
-    medium: [16, 16, 40],
-    hard: [30, 20, 100]
+    easy: [8, 8, 10, 54],
+    medium: [16, 16, 40, 216],
+    hard: [30, 20, 100, 500]
   }
 
   def initialize(level = :easy)
-    @rows_num, @cols_num, @bomb_count = GAME_LEVEL[level]
+    @id = SecureRandom.hex(4)
+    @rows_num, @cols_num, @bomb_count, @safe_cells = GAME_LEVEL[level]
     @started = Time.now
     @status = 'in progress'
     @rows = []
 
     populate!
   end
+  
+  def to_json
+    {
+      started: started,
+      finished: finished,
+      status: status,
+      id: id,
+      columns: @cols_num,
+      rotws: @rows_num,
+      board: board.map.with_index(0) { |row, idx| [idx, row] }.map.with_object({}) { |ary, res| res[ary.first] = ary.last; res }
+    }.to_json
+  end
 
-  def content
-    @content ||= rows.map do |row|
+  def board
+    @board ||= rows.map do |row|
       row.map { |r| r[:revealed] ? r[:content] : '#' }.join(' ')
     end
   end
@@ -31,7 +44,7 @@ class Game
     return self if @finished
 
     reveal_cel(row, col)
-    @content = nil
+    @board = nil
 
     self
   end
@@ -44,6 +57,7 @@ class Game
     cel = rows[row][col]
 
     cel[:revealed] = true
+    @safe_cells -= 1
 
     if cel[:bomb]
       @status = 'lost'
@@ -51,7 +65,10 @@ class Game
     elsif cel[:content] == '0'
       surrounding_cells(row, col).each do |coords|
         cel = rows[coords.first][coords.last]
-        cel[:revealed] = cel[:content] == '0'
+        if cel[:content] == '0'
+          cel[:revealed] = true
+          @safe_cells -= 1
+        end
       end
     end
   end
@@ -90,9 +107,9 @@ class Game
       row.each_with_index do |cell, col_index|
         cell[:revealed] = false
         cell[:content] = if cell[:bomb]
-                           'b'
-                         else
-                           find_surrounding_bombs(row_index, col_index).count.to_s
+          'b'
+        else
+          find_surrounding_bombs(row_index, col_index).count.to_s
         end
 
         rows[row_index][col_index] = cell
