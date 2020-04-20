@@ -56,5 +56,8 @@ DEPENDENCIES
   rspec (= 3.9.0)
   sinatra (= 2.0.8.1)
 
+RUBY VERSION
+   ruby 2.7.0p0
+
 BUNDLED WITH
    2.1.4
